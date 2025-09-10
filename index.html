@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>分享AI🤩玩拉霸</title>
+    <title>分享AI🤩抽盲盒</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -86,134 +86,61 @@
             box-shadow: 0 0 0 3px rgba(141, 123, 104, 0.2);
         }
 
-        /* --- START: 拉霸機樣式 --- */
-        #slot-machine-wrapper {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding-bottom: 2rem;
-            perspective: 1000px; /* 為 3D 動畫增加透視效果 */
-        }
-        .slot-machine {
+        /* 盲盒樣式 */
+        .blind-box {
             position: relative;
-            width: 600px;
-            height: 600px; /* 根據圖片比例調整 */
-            background-image: url('slot-machine.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-        .slot-window-wrapper {
-            position: absolute;
-            top: 26.9%; /* 向下移動 3% */
-            left: 19.4%; /* 根據圖片微調 */
-            width: 60%; /* 根據圖片微調 */
-            height: 26.2%; /* 根據圖片微調 */
+            width: 150px;
+            height: 150px;
+            border-radius: 12px;
             display: flex;
             justify-content: center;
             align-items: center;
+            font-size: 3rem;
+            font-weight: bold;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.4s ease, background-color 0.4s ease, border-color 0.4s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 0 3px 6px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            border: 2px solid rgba(255,255,255,0.5);
         }
-        .slot-window {
+        .blind-box:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2), 0 5px 10px rgba(0, 0, 0, 0.15);
+        }
+        .blind-box.opened {
+            background-color: #6B7280 !important;
+            color: #D1D5DB;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: inset 0 4px 8px rgba(0,0,0,0.2);
+            text-shadow: none;
+            padding: 10px;
+            text-align: center;
+            font-size: 1rem;
+            line-height: 1.4;
+            flex-direction: column;
+        }
+        .blind-box.opening {
+            animation: openBox 0.5s ease-in-out;
+        }
+
+        @keyframes openBox {
+            0% { transform: scale(1) rotateX(0deg); }
+            50% { transform: scale(1.15) rotateX(180deg); }
+            100% { transform: scale(1) rotateX(360deg); }
+        }
+
+        /* 慶祝動畫 Canvas */
+        #celebration-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(248, 247, 245, 0.9); /* 淺色主題背景 */
-            border-radius: 5px;
-            overflow: hidden;
-            position: relative;
-            border: 3px solid #333;
-            box-shadow: inset 0 0 15px rgba(0,0,0,0.5);
-        }
-        .slot-window::before, .slot-window::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            width: 100%;
-            height: 20%;
-            z-index: 2;
             pointer-events: none;
+            z-index: 10;
         }
-        .slot-window::before {
-            top: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.6), transparent);
-        }
-        .slot-window::after {
-            bottom: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
-        }
-        #slot-reel {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-        }
-        .reel-item {
-            width: 100%;
-            height: 76px; /* 視窗高度 / 3 */
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-            justify-content: flex-start;
-            font-size: 1.5rem;
-            font-weight: bold;
-            border-bottom: 2px dashed rgba(0,0,0,0.2);
-            color: #333;
-            padding: 0 20px;
-        }
-        .reel-item svg {
-            width: 55px;
-            height: 55px;
-            margin-right: 15px;
-        }
-        .lever {
-            position: absolute;
-            right: 9%;
-            top: 34%;
-            width: 80px;
-            height: 125px;
-            cursor: pointer;
-            transform-origin: 50% 100%;
-            transform-style: preserve-3d; 
-        }
-        .lever-arm {
-            width: 12px;
-            height: 100px;
-            background: linear-gradient(to right, #ccc, #777);
-            border-radius: 10px;
-            position: absolute;
-            bottom: 0;
-            left: 34px;
-            transform-origin: bottom center;
-            transition: transform 0.4s ease-in-out;
-            transform-style: preserve-3d;
-            box-shadow: 2px 2px 5px rgba(0,0,0,0.4);
-        }
-        .lever-ball {
-            width: 30px;
-            height: 30px;
-            background: radial-gradient(circle at 10px 10px, #FF6B6B, #C41E3A);
-            border-radius: 50%;
-            position: absolute;
-            top: -15px;
-            left: 50%;
-            transform: translateX(-50%);
-            box-shadow: inset 3px 3px 5px rgba(255,255,255,0.4), inset -3px -3px 5px rgba(0,0,0,0.4);
-            transition: transform 0.4s ease-in-out;
-        }
-        .lever.pulled .lever-arm {
-            transform: rotateX(-60deg);
-        }
-        .lever.pulled .lever-ball {
-            transform: translateX(-50%) rotateX(60deg) scale(1.25);
-        }
-        @keyframes red-flash {
-            0%, 100% { box-shadow: inset 0 0 50px 25px rgba(255, 0, 0, 0), 0 0 10px rgba(255,0,0,0); }
-            50% { box-shadow: inset 0 0 50px 25px rgba(255, 0, 0, 0.7), 0 0 40px 10px rgba(255,0,0,0.7); }
-        }
-        .winner-flash {
-            animation: red-flash 0.5s 6;
-        }
-        /* --- END: 拉霸機樣式 --- */
-
 
         /* Modal 樣式 */
         .modal-backdrop {
@@ -237,6 +164,7 @@
             transition: background-color 0.5s ease;
         }
         
+        /* 獎品清單 */
         #prize-list > div, #inventory-list > div, #winners-table > div {
             padding: 1rem;
             border-bottom: 1px solid #F3F4F6;
@@ -246,6 +174,7 @@
             border-bottom: none;
         }
 
+        /* Theme Switcher */
         .theme-btn.active {
             background-color: #8D7B68;
             color: white;
@@ -261,6 +190,7 @@
             background-size: 20px 20px;
             color: #E0E0E0;
         }
+
         .theme-rog .section-container {
             background-color: rgba(26, 26, 30, 0.85);
             border-radius: 4px;
@@ -268,14 +198,17 @@
             box-shadow: 0 0 15px rgba(255, 0, 60, 0.3), inset 0 0 10px rgba(255, 0, 60, 0.2);
             backdrop-filter: blur(5px);
         }
+
         .theme-rog header h1, .theme-rog #modal-title {
             color: #FFF;
             text-shadow: 0 0 5px #ff003c, 0 0 10px #ff003c, 0 0 15px #ff003c;
         }
+
         .theme-rog header p {
             color: #aaa;
             letter-spacing: 2px;
         }
+
         .theme-rog h2, .theme-rog h3 {
             color: #ff003c;
             border-bottom-color: #ff003c;
@@ -283,12 +216,14 @@
             letter-spacing: 1px;
             text-shadow: 0 0 5px rgba(255, 0, 60, 0.7);
         }
+        
         .theme-rog .btn {
             border-radius: 4px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.5);
             text-transform: uppercase;
             clip-path: polygon(0 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%);
         }
+
         .theme-rog .btn-primary {
             background: linear-gradient(45deg, #e60032, #ff4c6b);
             color: white;
@@ -298,6 +233,7 @@
             background: linear-gradient(45deg, #ff4c6b, #e60032);
             box-shadow: 0 4px 8px rgba(0,0,0,0.6), 0 0 10px #ff4c6b;
         }
+
         .theme-rog .btn-secondary {
             background-color: #333;
             color: #E0E0E0;
@@ -307,10 +243,12 @@
             background-color: #444;
             border-color: #ff4c6b;
         }
+
         .theme-rog .btn-danger {
             background: linear-gradient(45deg, #8B0000, #DC143C);
             color: white;
         }
+
         .theme-rog .input-field {
             background-color: #1a1a1a;
             border: 1px solid #555;
@@ -321,42 +259,75 @@
             border-color: #ff003c;
             box-shadow: 0 0 0 3px rgba(255, 0, 60, 0.4);
         }
-        .theme-rog .slot-window {
-            background-color: rgba(10, 10, 10, 0.9); /* ROG 暗色主題背景 */
+
+        .theme-rog .blind-box {
+            background: linear-gradient(145deg, #2e2e2e, #1a1a1a);
+            border: 2px solid #ff003c;
+            box-shadow: 0 0 10px rgba(255, 0, 60, 0.5), inset 0 0 5px rgba(255, 255, 255, 0.1);
+            color: #FFF;
+            text-shadow: 0 0 8px #ff003c;
+            border-radius: 8px;
         }
-        .theme-rog .reel-item {
-            color: #eee;
-            border-bottom-color: rgba(255,0,60,0.4);
+        .theme-rog .blind-box:hover {
+            box-shadow: 0 0 20px rgba(255, 0, 60, 0.8), inset 0 0 8px rgba(255, 255, 255, 0.2);
+            border-color: #ff5a5a;
         }
-        .theme-rog .slot-window::before {
-             background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+        .theme-rog .blind-box {
+            background: linear-gradient(145deg, #2e2e2e, #1a1a1a);
+            border: 2px solid transparent;
+            box-shadow: inset 0 0 5px rgba(255, 255, 255, 0.1);
+            color: #FFF;
+            border-radius: 8px;
+            transition: transform 0.3s ease, box-shadow 0.4s ease, border-color 0.4s ease;
         }
-         .theme-rog .slot-window::after {
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+        .theme-rog .blind-box:hover {
+            transform: translateY(-8px) scale(1.05);
+        }
+        /* ROG Neon Colors */
+        .theme-rog .blind-box.rog-color-1 { border-color: #ff003c; text-shadow: 0 0 8px #ff003c; box-shadow: 0 0 10px #ff003c, inset 0 0 5px rgba(255,255,255,0.1); }
+        .theme-rog .blind-box.rog-color-1:hover { border-color: #ff5a5a; box-shadow: 0 0 20px #ff003c, inset 0 0 8px rgba(255,255,255,0.2); }
+        .theme-rog .blind-box.rog-color-2 { border-color: #ff7f50; text-shadow: 0 0 8px #ff7f50; box-shadow: 0 0 10px #ff7f50, inset 0 0 5px rgba(255,255,255,0.1); }
+        .theme-rog .blind-box.rog-color-2:hover { border-color: #ffa07a; box-shadow: 0 0 20px #ff7f50, inset 0 0 8px rgba(255,255,255,0.2); }
+        .theme-rog .blind-box.rog-color-3 { border-color: #00ffff; text-shadow: 0 0 8px #00ffff; box-shadow: 0 0 10px #00ffff, inset 0 0 5px rgba(255,255,255,0.1); }
+        .theme-rog .blind-box.rog-color-3:hover { border-color: #7fffd4; box-shadow: 0 0 20px #00ffff, inset 0 0 8px rgba(255,255,255,0.2); }
+        .theme-rog .blind-box.rog-color-4 { border-color: #da70d6; text-shadow: 0 0 8px #da70d6; box-shadow: 0 0 10px #da70d6, inset 0 0 5px rgba(255,255,255,0.1); }
+        .theme-rog .blind-box.rog-color-4:hover { border-color: #ee82ee; box-shadow: 0 0 20px #da70d6, inset 0 0 8px rgba(255,255,255,0.2); }
+        .theme-rog .blind-box.rog-color-5 { border-color: #ff1493; text-shadow: 0 0 8px #ff1493; box-shadow: 0 0 10px #ff1493, inset 0 0 5px rgba(255,255,255,0.1); }
+        .theme-rog .blind-box.rog-color-5:hover { border-color: #ff69b4; box-shadow: 0 0 20px #ff1493, inset 0 0 8px rgba(255,255,255,0.2); }
+        .theme-rog .blind-box.rog-color-6 { border-color: #32cd32; text-shadow: 0 0 8px #32cd32; box-shadow: 0 0 10px #32cd32, inset 0 0 5px rgba(255,255,255,0.1); }
+        .theme-rog .blind-box.rog-color-6:hover { border-color: #98fb98; box-shadow: 0 0 20px #32cd32, inset 0 0 8px rgba(255,255,255,0.2); }
+        .theme-rog .blind-box.opened .font-bold {
+            color: #ff003c;
         }
 
         .theme-rog .modal-content {
             background-color: #2a2a2a;
             border: 1px solid #ff003c;
         }
+
         .theme-rog #inventory-list, .theme-rog #winners-table-container {
              background-color: rgba(0,0,0,0.2);
         }
+        
         .theme-rog #prize-list > div, .theme-rog #inventory-list > div, .theme-rog #winners-table > div {
             border-bottom-color: #333;
             color: #f5f5f5;
         }
+        
         .theme-rog #prize-list .text-gray-600 {
             color: #a0a0a0;
         }
+        
         .theme-rog #winners-table-container > div:first-child {
             background-color: #111;
         }
+
         .theme-rog .theme-btn.active {
             background: linear-gradient(45deg, #e60032, #ff4c6b);
             border: 1px solid #ff4c6b;
             color: white;
         }
+        
         .theme-rog #toggle-music-btn.bg-green-100 {
             background-color: #1a4d2e !important;
             color: #90ee90;
@@ -369,7 +340,7 @@
     <div class="max-w-5xl mx-auto">
 
         <header class="text-center mb-10">
-            <h1 class="text-4xl font-bold text-[#333]" style="font-family: 'Noto Sans JP', sans-serif;">分享AI🤩玩拉霸</h1>
+            <h1 class="text-4xl font-bold text-[#333]" style="font-family: 'Noto Sans JP', sans-serif;">分享AI🤩抽盲盒</h1>
             <p class="text-lg mt-2 text-gray-500">China Motor Company . 生管部</p>
         </header>
         
@@ -395,32 +366,18 @@
             </div>
         </div>
 
-        <!-- 第二區：拉霸機抽獎區 -->
+        <!-- 第二區：盲盒抽獎區 -->
         <div id="lottery-area" class="section-container">
-            <h2>拉霸抽獎</h2>
-            <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-1">
-                <input type="text" id="participant-name" placeholder="請在此輸入您的姓名後按 Enter" class="input-field w-full sm:w-2/3">
+            <h2>盲盒抽獎</h2>
+            <div class="flex flex-col sm:flex-row items-center gap-4 mb-8">
+                <input type="text" id="participant-name" placeholder="請輸入您的姓名" class="input-field flex-grow">
+                <button id="start-draw-btn" class="btn btn-primary w-full sm:w-auto">✓ 確認姓名，開始抽獎</button>
             </div>
-            <div id="draw-status" class="text-center text-lg text-red-600 font-bold mb-3 h-8"></div>
-
-            <!-- 拉霸機本體 -->
-            <div id="slot-machine-wrapper">
-                <div class="slot-machine">
-                    <div class="slot-window-wrapper">
-                        <div id="slot-window" class="slot-window">
-                             <div id="slot-reel">
-                                <!-- 滾動的獎項會由 JS 生成 -->
-                            </div>
-                        </div>
-                    </div>
-                    <div id="slot-lever" class="lever">
-                        <div class="lever-arm">
-                            <div class="lever-ball"></div>
-                        </div>
-                    </div>
-                </div>
+            <div id="draw-status" class="text-center text-lg text-red-600 font-bold mb-6 h-8"></div>
+            <div id="blind-box-container" class="relative flex flex-wrap justify-center gap-6 p-4" style="perspective: 1000px;">
+                <canvas id="celebration-canvas"></canvas>
+                <!-- 盲盒會由 JavaScript 動態生成 -->
             </div>
-
             <div id="inventory-section" class="mt-12">
                 <h3 class="text-xl font-semibold mb-4 text-center">獎品剩餘庫存</h3>
                 <div id="inventory-list" class="bg-gray-50 p-4 rounded-lg grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
@@ -480,9 +437,6 @@
             let winners = [];
             let drawnNames = new Set();
             let currentParticipant = null;
-            let isSpinning = false;
-            let isStopping = false;
-            let spinEndTimeout = null;
 
             // --- DOM 元素 ---
             const prizeList = document.getElementById('prize-list');
@@ -496,18 +450,28 @@
             const modalPrizeQuantity = document.getElementById('prize-quantity');
             
             const participantNameInput = document.getElementById('participant-name');
+            const startDrawBtn = document.getElementById('start-draw-btn');
             const drawStatus = document.getElementById('draw-status');
+            const blindBoxContainer = document.getElementById('blind-box-container');
             const inventoryList = document.getElementById('inventory-list');
             
-            const slotLever = document.getElementById('slot-lever');
-            const slotReel = document.getElementById('slot-reel');
-            const slotWindow = document.getElementById('slot-window');
-
             const winnersTable = document.getElementById('winners-table');
             const exportCsvBtn = document.getElementById('export-csv-btn');
 
             const themeSwitcher = document.getElementById('theme-switcher');
             const themeButtons = document.querySelectorAll('.theme-btn');
+
+            // --- 慶祝動畫 Canvas ---
+            const canvas = document.getElementById('celebration-canvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+
+            function resizeCanvas() {
+                canvas.width = blindBoxContainer.clientWidth;
+                canvas.height = blindBoxContainer.clientHeight;
+            }
+            window.addEventListener('resize', resizeCanvas);
+
 
             // --- YouTube Player ---
             let player;
@@ -521,10 +485,14 @@
                     playerVars: {
                         listType: 'playlist',
                         list: 'PLbYHhP_Esm05t_qgCEeI9K3-8WECKWxDD',
-                        index: 4,
+                        index: 4, // index 5 is video 'xHD51NobnLI'
                         loop: 1,
                     },
-                    events: { 'onReady': (event) => { event.target.setVolume(50); } }
+                    events: {
+                        'onReady': (event) => {
+                             event.target.setVolume(50); // 設定音量
+                        }
+                    }
                 });
             }
 
@@ -541,26 +509,14 @@
                 }
             });
 
-            // --- 獎品圖示 ---
-            const getPrizeIcon = (name) => {
-                if (name.includes('美式')) {
-                    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20,3H4A2,2,0,0,0,2,5V15a2,2,0,0,0,2,2h8a2,2,0,0,0,2-2V14h2a3,3,0,0,0,3-3V5A2,2,0,0,0,20,3Zm-2,8H16V5h2ZM4,5H14v9a.44.44,0,0,1,0,.13V15H4Z M4,19h16v2H4Z"/></svg>`;
-                }
-                if (name.includes('拿鐵')) {
-                    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20,3H4A2,2,0,0,0,2,5v8a4,4,0,0,0,4,4h6a4,4,0,0,0,4-4V14h2a3,3,0,0,0,3-3V5A2,2,0,0,0,20,3Zm-2,8h-2V5h2Zm-4,4H6a2,2,0,0,1-2-2V5H14ZM4,19h16v2H4Z M10,6a2.5,2.5,0,0,0-5,0,2.4,2.4,0,0,0,.5,1.5L9,11l3.5-3.5A2.4,2.4,0,0,0,13,6a2.5,2.5,0,0,0-3,0Z"/></svg>`;
-                }
-                if (name.includes('星巴克') || name.includes('點心')) {
-                    return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16,5V4a2,2,0,0,0-2-2H4A2,2,0,0,0,2,4v8a2,2,0,0,0,2,2h8a2,2,0,0,0,2-2v-.17a3,3,0,0,1,2,0V12a2,2,0,0,0,2,2h0a2,2,0,0,0,2-2V7a2,2,0,0,0-2-2ZM14,12H4V4h10ZM20,12h0Z M22.7,15.21a1,1,0,0,0-1.13-.23,6,6,0,0,1-7.14,0,1,1,0,0,0-1.13.23,1,1,0,0,0,.24,1.12,8,8,0,0,0,9.52,0A1,1,0,0,0,22.7,15.21Z M17,18a3,3,0,0,0,3,3,3,3,0,0,0,2.12-.88A3,3,0,0,0,17,18Z"/></svg>`;
-                }
-                return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20.5,6h-4.34a3,3,0,0,0-5.32,0H3.5a1,1,0,0,0-1,1V20.5a1,1,0,0,0,1,1h17a1,1,0,0,0,1-1V7A1,1,0,0,0,20.5,6ZM12,4a1,1,0,0,1,1,1,1,1,0,0,1-2,0A1,1,0,0,1,12,4Zm7.5,15.5h-15V8h3.33a3,3,0,0,0,5.34,0H19.5Z M13,11H11v4h2Zm-3,0h2v2H10Zm6,0h-2v2h2Z"/></svg>`;
-            };
 
             // --- 渲染函式 (Render Functions) ---
             function renderAll() {
                 renderPrizes();
-                renderSlotReel();
+                renderBlindBoxes();
                 renderInventory();
                 renderWinners();
+                resizeCanvas();
             }
 
             function renderPrizes() {
@@ -586,36 +542,38 @@
                 });
             }
             
-            function renderSlotReel() {
-                const availablePrizes = [];
-                prizes.forEach(p => {
-                    if (p.quantity > 0) {
-                        for(let i = 0; i < p.quantity; i++) {
-                             availablePrizes.push(p);
-                        }
-                    }
-                });
-
-                for (let i = availablePrizes.length - 1; i > 0; i--) {
-                    const j = Math.floor(Math.random() * (i + 1));
-                    [availablePrizes[i], availablePrizes[j]] = [availablePrizes[j], availablePrizes[i]];
-                }
+            function renderBlindBoxes() {
+                // 清除舊的盲盒和訊息，但保留 canvas 以確保動畫參考有效
+                blindBoxContainer.querySelectorAll('.blind-box, .text-2xl.font-bold.text-gray-500').forEach(el => el.remove());
                 
-                if (availablePrizes.length === 0) {
-                    slotReel.innerHTML = `<div class="reel-item" style="height: 100%; color: red; justify-content: center;">所有獎品已被抽完！</div>`;
-                    return;
+                const remainingPrizes = prizes.reduce((total, p) => total + p.quantity, 0);
+                
+                if (remainingPrizes === 0) {
+                     blindBoxContainer.innerHTML += '<div class="text-2xl font-bold text-gray-500">所有獎品已被抽完！</div>';
+                     return;
                 }
 
-                const displayItems = [...availablePrizes, ...availablePrizes, ...availablePrizes, ...availablePrizes, ...availablePrizes];
+                const isRogTheme = document.body.classList.contains('theme-rog');
+                const defaultColors = ['#F9A8D4', '#A7F3D0', '#BFDBFE', '#FDE68A', '#FBCFE8', '#C7D2FE', '#F59E0B', '#6EE7B7'];
+                // ROG風格使用CSS class來控制顏色
+                const rogColorClasses = ['rog-color-1', 'rog-color-2', 'rog-color-3', 'rog-color-4', 'rog-color-5', 'rog-color-6'];
 
-                slotReel.innerHTML = displayItems.map(prize => `
-                    <div class="reel-item" data-name="${prize.name}">
-                        ${getPrizeIcon(prize.name)}
-                        <span>${prize.name}</span>
-                    </div>
-                `).join('');
+
+                for (let i = 0; i < remainingPrizes; i++) {
+                    const box = document.createElement('div');
+                    box.className = 'blind-box';
+                    box.textContent = i + 1;
+                    
+                    if (isRogTheme) {
+                        box.classList.add(rogColorClasses[i % rogColorClasses.length]);
+                    } else {
+                        box.style.backgroundColor = defaultColors[i % defaultColors.length];
+                    }
+                    
+                    box.addEventListener('click', handleBoxClick);
+                    blindBoxContainer.appendChild(box);
+                }
             }
-
 
             function renderInventory() {
                 inventoryList.innerHTML = '';
@@ -653,6 +611,7 @@
 
             // --- 事件處理函式 (Event Handlers) ---
             
+            // 獎品管理 Modal
             function openPrizeModal(index = null) {
                 prizeForm.reset();
                 if (index !== null) {
@@ -677,7 +636,8 @@
 
             prizeList.addEventListener('click', (e) => {
                 if (e.target.classList.contains('edit-btn')) {
-                    openPrizeModal(e.target.dataset.index);
+                    const index = e.target.dataset.index;
+                    openPrizeModal(index);
                 }
                 if (e.target.classList.contains('delete-btn')) {
                     const index = e.target.dataset.index;
@@ -694,13 +654,14 @@
                 const quantity = parseInt(modalPrizeQuantity.value);
                 const index = modalPrizeIndex.value;
 
-                if (index) {
+                if (index) { // 編輯
                     prizes[index].name = name;
                     prizes[index].initialQuantity = quantity;
-                    prizes[index].quantity = quantity;
-                } else {
+                    prizes[index].quantity = quantity; // 重設庫存
+                } else { // 新增
                     prizes.push({ name, quantity, initialQuantity: quantity });
                 }
+                // 清空得獎紀錄並重設抽獎狀態
                 winners = [];
                 drawnNames.clear();
                 currentParticipant = null;
@@ -708,111 +669,35 @@
                 renderAll();
             });
 
-            participantNameInput.addEventListener('change', () => {
+
+            // 抽獎流程
+            startDrawBtn.addEventListener('click', () => {
                 const name = participantNameInput.value.trim();
-                
-                if (!name && !isSpinning) {
-                    currentParticipant = null;
-                    drawStatus.textContent = '';
-                    return;
-                }
-
                 if (!name) {
+                    drawStatus.textContent = '請先輸入姓名！';
                     return;
                 }
-
                 if (drawnNames.has(name)) {
                     drawStatus.textContent = `"${name}" 您已經抽過獎了喔！`;
-                    setTimeout(() => {
-                       if(participantNameInput.value === name) {
-                         participantNameInput.value = '';
-                         drawStatus.textContent = '請輸入另一位姓名。';
-                       }
-                    }, 1500);
                     return;
                 }
                 currentParticipant = name;
-                drawStatus.textContent = `你好, ${name}！請拉動拉桿開始！`;
+                drawStatus.textContent = `你好, ${name}！請點選一個您喜歡的盲盒。`;
                 participantNameInput.disabled = true;
+                startDrawBtn.disabled = true;
             });
-
-            function finalizeWin(wonPrizeName) {
-                slotWindow.classList.add('winner-flash');
-                
-                const prizeToUpdate = prizes.find(p => p.name === wonPrizeName);
-                if (prizeToUpdate) prizeToUpdate.quantity--;
-                
-                winners.push({ name: currentParticipant, prize: wonPrizeName });
-                drawnNames.add(currentParticipant);
-
-                setTimeout(() => {
-                    slotWindow.classList.remove('winner-flash');
-                    
-                    currentParticipant = null;
-                    participantNameInput.value = '';
-                    participantNameInput.disabled = false;
-                    drawStatus.textContent = '恭喜！請下一位抽獎者輸入姓名。';
-
-                    isSpinning = false;
-                    isStopping = false;
-                    
-                    renderAll();
-                    
-                    slotReel.style.transition = 'none';
-                    slotReel.style.transform = `translateY(0px)`;
-                    setTimeout(() => {
-                        slotReel.style.transition = ''; 
-                    }, 50);
-                    
-                }, 3000);
-            }
-
-            function manualBrake() {
-                if (isStopping) return;
-                isStopping = true;
-                clearTimeout(spinEndTimeout);
-
-                slotLever.classList.remove('pulled');
-
-                const reelItems = Array.from(slotReel.querySelectorAll('.reel-item'));
-                const itemHeight = reelItems[0].offsetHeight;
-                const windowHeight = slotWindow.offsetHeight;
-                
-                const style = window.getComputedStyle(slotReel);
-                const matrix = new DOMMatrixReadOnly(style.transform);
-                const currentY = matrix.m42;
-                
-                const currentItemIndex = Math.round(Math.abs(currentY) / itemHeight);
-
-                const additionalScroll = Math.floor(Math.random() * 3) + 2;
-                const targetIndexInDOM = currentItemIndex + additionalScroll;
-
-                const finalTargetIndex = Math.min(targetIndexInDOM, reelItems.length - 1);
-                
-                const wonPrizeName = reelItems[finalTargetIndex].dataset.name;
-                
-                const targetPosition = finalTargetIndex * itemHeight;
-                const centeredPosition = targetPosition - (windowHeight / 2) + (itemHeight / 2);
-
-                slotReel.style.transition = 'transform 2.5s cubic-bezier(0.23, 1, 0.32, 1)';
-                slotReel.style.transform = `translateY(-${centeredPosition}px)`;
-                
-                spinEndTimeout = setTimeout(() => finalizeWin(wonPrizeName), 2500);
-            }
             
-            function handleSpin() {
-                if (isSpinning && !isStopping) {
-                    manualBrake();
-                    return;
-                }
-
-                if (isSpinning) return;
-
+            function handleBoxClick(e) {
+                const box = e.target;
                 if (!currentParticipant) {
                     drawStatus.textContent = '請先輸入並確認姓名！';
                     return;
                 }
-                
+                if (box.classList.contains('opened')) {
+                    return;
+                }
+
+                // 產生加權獎池
                 const prizePool = [];
                 prizes.forEach(prize => {
                     for (let i = 0; i < prize.quantity; i++) {
@@ -821,53 +706,50 @@
                 });
 
                 if (prizePool.length === 0) {
-                    drawStatus.textContent = '所有獎品已被抽完！';
-                    return;
+                     drawStatus.textContent = '所有獎品已被抽完！';
+                     return;
                 }
 
-                isSpinning = true;
-                isStopping = false;
-                slotLever.classList.add('pulled');
-                drawStatus.textContent = '祝您好運！再次拉動拉桿即可煞車！';
-                
-                const reelItems = Array.from(slotReel.querySelectorAll('.reel-item'));
-                const itemHeight = reelItems[0].offsetHeight;
-                const windowHeight = slotWindow.offsetHeight;
-                
+                // 抽獎
                 const randomIndex = Math.floor(Math.random() * prizePool.length);
                 const wonPrizeName = prizePool[randomIndex];
                 
-                let targetIndexInDOM = -1;
-                const basePoolSize = prizePool.length;
-                const searchStartIndex = basePoolSize * 3;
-                const searchEndIndex = basePoolSize * 4;
+                // 更新獎品庫存
+                const prizeToUpdate = prizes.find(p => p.name === wonPrizeName);
+                if (prizeToUpdate) {
+                    prizeToUpdate.quantity--;
+                }
                 
-                for(let i = searchStartIndex; i < searchEndIndex; i++) {
-                    if (reelItems[i] && reelItems[i].dataset.name === wonPrizeName) {
-                        targetIndexInDOM = i;
-                        break;
-                    }
-                }
-                if (targetIndexInDOM === -1) {
-                    targetIndexInDOM = searchStartIndex + Math.floor(Math.random() * basePoolSize);
-                }
+                // 記錄得獎者
+                winners.push({ name: currentParticipant, prize: wonPrizeName });
+                drawnNames.add(currentParticipant);
 
-                const targetPosition = targetIndexInDOM * itemHeight;
-                const centeredPosition = targetPosition - (windowHeight / 2) + (itemHeight / 2);
+                // 動畫與UI更新
+                box.classList.add('opening');
+                triggerCelebration();
 
-                const spinDuration = 7000;
-                slotReel.style.transition = `transform ${spinDuration}ms cubic-bezier(0.33, 1, 0.68, 1)`;
-                slotReel.style.transform = `translateY(-${centeredPosition}px)`;
+                setTimeout(() => {
+                    box.classList.remove('opening');
+                    box.classList.add('opened');
+                    box.innerHTML = `
+                        <div class="font-bold text-lg">🎁</div>
+                        <div class="font-semibold break-all">${wonPrizeName}</div>
+                        <div class="text-xs mt-2">${currentParticipant}</div>
+                    `;
+                    box.removeEventListener('click', handleBoxClick);
+                    
+                    // 重置狀態
+                    currentParticipant = null;
+                    participantNameInput.value = '';
+                    participantNameInput.disabled = false;
+                    startDrawBtn.disabled = false;
+                    drawStatus.textContent = '恭喜！請下一位抽獎者輸入姓名。';
 
-                spinEndTimeout = setTimeout(() => {
-                    if(!isStopping) { 
-                        slotLever.classList.remove('pulled');
-                        finalizeWin(wonPrizeName);
-                    }
-                }, spinDuration);
+                    // 重新渲染部分UI
+                    renderInventory();
+                    renderWinners();
+                }, 500); // 等待動畫結束
             }
-
-            slotLever.addEventListener('click', handleSpin);
 
             // CSV 匯出
             exportCsvBtn.addEventListener('click', () => {
@@ -875,7 +757,7 @@
                     alert('目前沒有得獎紀錄可匯出。');
                     return;
                 }
-                let csvContent = 'data:text/csv;charset=utf-8,\uFEFF';
+                let csvContent = 'data:text/csv;charset=utf-8,\uFEFF'; // \uFEFF for BOM to support Excel
                 csvContent += '得獎人,獎品\n';
                 winners.forEach(row => {
                     csvContent += `${row.name},${row.prize}\n`;
@@ -893,24 +775,40 @@
             // --- 主題切換 ---
             function applyTheme(theme) {
                 const headerTitle = document.querySelector('header h1');
+                const headerSubtitle = document.querySelector('header p');
+
+                // 移除所有可能的主題 class
                 document.body.classList.remove('theme-rog');
 
+                // 添加選定的主題 class
                 if (theme === 'rog') {
                     document.body.classList.add('theme-rog');
-                    headerTitle.textContent = '分享AI🤩玩拉霸';
+                    headerTitle.textContent = '分享AI🤩抽盲盒';
+                    headerSubtitle.textContent = 'China Motor Company . 生管部';
                 } else {
-                    headerTitle.textContent = '分享AI🤩玩拉霸';
+                    headerTitle.textContent = '分享AI🤩抽盲盒';
+                    headerSubtitle.textContent = 'China Motor Company . 生管部';
                 }
 
+                // 更新按鈕的 active 狀態
                 themeButtons.forEach(btn => {
-                    btn.classList.toggle('active', btn.dataset.theme === theme);
+                    if (btn.dataset.theme === theme) {
+                        btn.classList.add('active');
+                    } else {
+                        btn.classList.remove('active');
+                    }
                 });
+
+                // 儲存偏好
                 localStorage.setItem('lotteryTheme', theme);
+                // 因為盲盒顏色依賴主題，所以需要重新渲染
+                renderBlindBoxes();
             }
 
             themeSwitcher.addEventListener('click', (e) => {
                 if (e.target.classList.contains('theme-btn')) {
-                    applyTheme(e.target.dataset.theme);
+                    const selectedTheme = e.target.dataset.theme;
+                    applyTheme(selectedTheme);
                 }
             });
 
@@ -918,6 +816,73 @@
                 const savedTheme = localStorage.getItem('lotteryTheme') || 'default';
                 applyTheme(savedTheme);
             }
+
+
+            // --- 慶祝動畫邏輯 ---
+            function triggerCelebration() {
+                particles = []; // 清空
+                const particleCount = 400; // 效果加倍
+                const colors = ['#F9A8D4', '#A7F3D0', '#BFDBFE', '#FDE68A', '#FBCFE8'];
+                for (let i = 0; i < particleCount; i++) {
+                    particles.push(createParticle(colors[i % colors.length]));
+                }
+                animateParticles();
+            }
+
+            function createParticle(color) {
+                const x = Math.random() * canvas.width;
+                const y = canvas.height + Math.random() * 50;
+                const angle = -Math.PI / 2 + (Math.random() - 0.5) * (Math.PI / 2);
+                const speed = 2.6 + Math.random() * 3.5; // 速度增加，讓煙火更高
+                return {
+                    x: x,
+                    y: y,
+                    vx: Math.cos(angle) * speed,
+                    vy: Math.sin(angle) * speed,
+                    radius: 3 + Math.random() * 3, // 粒子也稍大一些
+                    color: color,
+                    alpha: 1,
+                    decay: 0.002 + Math.random() * 0.0025 // 生命週期更長以配合更高的高度
+                };
+            }
+
+            let animationFrameId;
+            function animateParticles() {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                particles.forEach((p, index) => {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    p.vy += 0.08; // 重力減弱，飄浮感更強
+                    p.alpha -= p.decay;
+
+                    if (p.alpha <= 0) {
+                        particles.splice(index, 1);
+                    } else {
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2, false);
+                        ctx.fillStyle = `rgba(${hexToRgb(p.color).r}, ${hexToRgb(p.color).g}, ${hexToRgb(p.color).b}, ${p.alpha})`;
+                        ctx.fill();
+                    }
+                });
+                
+                if (particles.length > 0) {
+                   animationFrameId = requestAnimationFrame(animateParticles);
+                } else {
+                   cancelAnimationFrame(animationFrameId);
+                   ctx.clearRect(0, 0, canvas.width, canvas.height); // 清理畫布
+                }
+            }
+            
+            function hexToRgb(hex) {
+                let result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+                return result ? {
+                    r: parseInt(result[1], 16),
+                    g: parseInt(result[2], 16),
+                    b: parseInt(result[3], 16)
+                } : null;
+            }
+
 
             // --- 初始化 ---
             loadTheme();
@@ -927,4 +892,6 @@
     <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
+
+
 
