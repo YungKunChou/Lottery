@@ -344,10 +344,22 @@
             <p class="text-lg mt-2 text-gray-500">China Motor Company . 生管部</p>
         </header>
         
-        <!-- THEME SWITCHER -->
-        <div id="theme-switcher" class="flex justify-center gap-4 mb-8">
-            <button data-theme="default" class="btn btn-secondary theme-btn">中川政七風格</button>
-            <button data-theme="rog" class="btn btn-secondary theme-btn">ASUS ROG 風格</button>
+        <!-- THEME SWITCHER & MUSIC CONTROLS -->
+        <div class="flex justify-between items-center flex-wrap gap-y-4 mb-8">
+            <!-- Left Spacer -->
+            <div class="flex-1 hidden md:block"></div>
+    
+            <!-- Centered Theme Buttons -->
+            <div id="theme-switcher" class="w-full md:w-auto flex justify-center gap-4 order-2 md:order-1">
+                <button data-theme="default" class="btn btn-secondary theme-btn">中川政七風格</button>
+                <button data-theme="rog" class="btn btn-secondary theme-btn">ASUS ROG 風格</button>
+            </div>
+    
+            <!-- Right Music Controls -->
+            <div id="youtube-player-controls" class="flex-1 flex justify-center md:justify-end order-1 md:order-2">
+                <button id="toggle-music-btn" class="btn btn-secondary text-sm">🔇 開啟背景音樂</button>
+                <div id="youtube-player" class="w-0 h-0 overflow-hidden"></div>
+            </div>
         </div>
 
 
@@ -359,10 +371,6 @@
             </div>
             <div class="flex flex-wrap items-center gap-4">
                 <button id="add-prize-btn" class="btn btn-primary">＋ 新增獎品</button>
-                <div id="youtube-player-controls" class="flex items-center gap-2">
-                    <button id="toggle-music-btn" class="btn btn-secondary text-sm">🔇 開啟背景音樂</button>
-                    <div id="youtube-player" class="w-0 h-0 overflow-hidden"></div>
-                </div>
             </div>
         </div>
 
@@ -889,4 +897,5 @@
     <script type="text/javascript" src="https://www.youtube.com/iframe_api"></script>
 </body>
 </html>
+
 
